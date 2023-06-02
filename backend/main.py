@@ -6,11 +6,16 @@ from fastapi import FastAPI, HTTPException
 from model import exerciseSchema, userSchema
 
 from database import (
-    fetch_one_todo,
-    fetch_all_todos,
-    create_todo,
-    update_todo,
-    remove_todo,
+    fetch_one_exercises,
+    fetch_one_users,
+    fetch_all_exercises,
+    fetch_all_users,
+    create_exercises,
+    create_users,
+    update_exercise,
+    update_user,
+    remove_exercise,
+    remove_user,
 )
 
 # an HTTP-specific exception class  to generate exception information
@@ -34,24 +39,35 @@ app.add_middleware(
 )
 
 @app.get("/exercises")
-async def read_exercises():
-    return
+async def get_exercises():
+    response = await fetch_all_exercises()
+    return response
 
-@app.get("/users", response_model=userSchema)
-async def read_exercises():
-    return
+@app.get("/users")
+async def get_users():
+    response = await fetch_all_users()
+    return response
 
 @app.post("/users/add", response_model=userSchema)
-async def read_exercises():
-    return
+async def post_users(user:userSchema):
+    response = await create_users(user.dict())
+    if response:
+        return response
+    raise HTTPException(400, "fail to add user")
 
 @app.delete("/exercises")
-async def delete_exercises():
-    return
+async def delete_exercises(id):
+    response = await remove_exercise(id)
+    if response:
+        return response
+    raise HTTPException(400, "fail to add exercise")
 
 @app.post("/exercises/add", response_model=exerciseSchema)
-async def delete_exercises():
-    return
+async def post_exercises(exercises:exerciseSchema):
+    response = await create_exercises(exercises.dict())
+    if response:
+        return response
+    raise HTTPException(400, "fail to add exercises")
 
 @app.get("/exercises/{id}", response_model=exerciseSchema)
 async def delete_exercises():

@@ -5,7 +5,7 @@ class exerciseSchema(BaseModel):
     username: str
     description: str
     duration: int
-    date: datetime.date
+    date: datetime
 
 class userSchema(BaseModel):
     username: str

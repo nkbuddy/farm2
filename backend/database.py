@@ -11,12 +11,12 @@ database = client.test
 exercises_collection = database.exercises
 users_collection = database.users
 
-async def fetch_one_exercises(title):
-    document = await exercises_collection.find_one({"title": title})
+async def fetch_one_exercises(id):
+    document = await exercises_collection.find_one({"_id": id})
     return document
 
-async def fetch_one_users(title):
-    document = await users_collection.find_one({"title": title})
+async def fetch_one_users(id):
+    document = await users_collection.find_one({"_id": id})
     return document
 
 async def fetch_all_exercises():
@@ -36,25 +36,29 @@ async def fetch_all_users():
 async def create_exercises(exercises):
     document = exercises
     result = await exercises_collection.insert_one(document)
-    return document
+    return result
 
 async def create_users(users):
     document = users
     result = await users_collection.insert_one(document)
+    return result
+
+async def update_exercise(id,username,description,duration):
+    await exercises_collection.update_one({"_id":id},{"$set":{"username":username,"description":description,"duration":duration}})
+    document = await exercises_collection.find_one({"_id":id})
     return document
 
-
-async def update_exercise(id,):
+async def update_user(id,username):
+    await users_collection.update_one({"_id":id},{"$set":{"username":username}})
     return
 
-async def update_user(id,):
-    return
+async def remove_exercise(id):
+    await exercises_collection.delete_one({"_id":id})
+    return True
 
-async def remove_exercise():
-    return
-
-async def remove_user():
-    return
+async def remove_user(id):
+    await users_collection.delete_one({"_id":id})
+    return True
 
 # async def fetch_one_todo(title):
 #     document = await collection.find_one({"title": title})
